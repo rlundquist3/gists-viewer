@@ -13,6 +13,13 @@ const serializeGist = (gist) => ({
   username: gist.owner.login,
 });
 
+/**
+ * Since this API is fairly small, I've kept the resolvers
+ * and type definitions together in this file. If the types
+ * were to get much larger or the resolvers had more complicated
+ * logic, they'd be better in their own files.
+ */
+
 const typeDefs = gql`
   type Gist @key(fields: "id") {
     id: ID!
@@ -30,6 +37,26 @@ const typeDefs = gql`
 
 const resolvers = {
   Gist: {
+    /**
+     * This is susceptible to the infamous N+1 problem.
+     * Unfortunately, there isn't a great way to solve that
+     * with the endpoints available in GitHub's API. If there
+     * were a way, for example, to make a request and pass an
+     * array of gist ids in the body, this could be resolved
+     * using dataloader (https://www.npmjs.com/package/dataloader)
+     * and something like dataloader-sort
+     * (https://www.npmjs.com/package/dataloader-sort - this seems very outdated,
+     * and I'm sure there are better alternatives, but it is what
+     * I've used before successfully).
+     *
+     * Fortunately, this isn't terrible performance-wise given that
+     * we're dealing with pages of 20, but does become a problem with
+     * the rate limit.
+     *
+     * An alternative would be storing all of the relevant gist info
+     * in our local DB, but then we would not guarantee up-to-date data
+     * (probably not an issue here, but food for thought in other contexts).
+     */
     __resolveReference: async ({ id }) => {
       try {
         const res = await gistsAPI.getGistById(id);

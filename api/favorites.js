@@ -12,6 +12,13 @@ const serializeFavorite = (favorite) => ({
   gistId: favorite.gist_id,
 });
 
+/**
+ * Since this API is fairly small, I've kept the resolvers
+ * and type definitions together in this file. If the types
+ * were to get much larger or the resolvers had more complicated
+ * logic, they'd be better in their own files.
+ */
+
 const typeDefs = gql`
   type FavoriteGist {
     id: ID!
@@ -47,6 +54,13 @@ const resolvers = {
     },
   },
   Gist: {
+    /**
+     * This is susceptible to the N+1 problem as described in
+     * the gists reference resolver. Here though, we should
+     * be able to mitigate it reasonably with dataloader, passing
+     * dataloader an array of gist ids and querying all favorites
+     * matching the list.
+     */
     favoriteGist: async (gist, _args, _context, _info) => {
       const queryText = `SELECT * FROM favorite_gists WHERE gist_id = '${String(gist.id)}'`;
 

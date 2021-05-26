@@ -16,6 +16,14 @@ const MarkUnfavorited = `
   }
 `;
 
+/**
+ * There's a bit of optimistic UI here to display the expected result of
+ * the mutations. A more elegant solution, which could also help some of the
+ * refetch/rerender clunkiness of the gist lists would be leveraging Urql's
+ * Graphcache (https://formidable.com/open-source/urql/docs/graphcache/cache-updates/).
+ * Didn't have time to get into that here as the setup is somewhat involved,
+ * but it is a great tool!
+ */
 export default function Gist({ id, createdAt, description, favorited: initialFavorited, username, refetch }) {
   const [favorited, setFavorited] = useState(initialFavorited);
   const [_markFavoritedResult, markFavorited] = useMutation(MarkFavorited);

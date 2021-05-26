@@ -23,6 +23,13 @@ export default function FavoritedGists() {
     query: GetFavoritedGists,
   });
 
+  /**
+   * You'll notice that refetching, loading, and error messages
+   * are the same for each of these queries. If that were realistic,
+   * I'd create a shared component to handle all of this, but ideally
+   * there would be context-specific error, empty, and loading states
+   * for each component/query.
+   */
   const refetch = () => {
     reexecuteQuery({ requestPolicy: 'network-only' });
   };
