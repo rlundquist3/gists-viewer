@@ -34,7 +34,7 @@ export default function Results({ searchStr }) {
     <UL>
       {map(data.getGistsForUser, (gist) => (
         <li key={gist.id}>
-          <Gist {...gist} refetch={reexecuteQuery} />
+          <Gist {...gist} favorited={gist.favoriteGist?.favorited} refetch={reexecuteQuery} />
         </li>
       ))}
     </UL>

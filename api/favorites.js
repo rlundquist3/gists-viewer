@@ -57,7 +57,7 @@ const resolvers = {
           return serializeFavorite(res.rows[0]);
         }
 
-        return null;
+        return { gistId: gist.id };
       } catch (error) {
         console.error(error);
       }

@@ -1,5 +1,6 @@
 import Head from 'next/head';
 import styled from 'styled-components';
+import { Button } from 'evergreen-ui';
 
 import Search from './components/search';
 

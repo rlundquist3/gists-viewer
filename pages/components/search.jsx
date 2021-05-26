@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { Button, TextInput } from 'evergreen-ui';
 
 import Results from './results';
+import FavoritedGists from './favorited-gists';
 
 export default function Search() {
   const [searchStr, setSearchStr] = useState('');
@@ -24,6 +25,7 @@ export default function Search() {
       <Button onClick={handleSubmit}>Let's Go!</Button>
 
       {submittedSearch.length > 2 && <Results searchStr={submittedSearch} />}
+      {submittedSearch.length <= 2 && <FavoritedGists />}
     </div>
   );
 }
