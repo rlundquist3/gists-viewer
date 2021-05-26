@@ -15,8 +15,13 @@ const serializeFavorite = (favorite) => ({
 const typeDefs = gql`
   type FavoriteGist {
     id: ID!
-    gistId: String!
     favorited: Boolean
+    gistId: String!
+    gist: [Gist]
+  }
+
+  extend type Gist @key(fields: "id") {
+    id: ID! @external
   }
 
   extend type Query {
@@ -25,6 +30,16 @@ const typeDefs = gql`
 `;
 
 const resolvers = {
+  FavoriteGist: {
+    gist: (favoriteGist, _args, _context, _info) => {
+      return [
+        {
+          __typename: 'Gist',
+          id: favoriteGist.gistId,
+        },
+      ];
+    },
+  },
   Query: {
     getFavoritedGists: async (_object, { page = 0 }, _context, _info) => {
       const queryText = `SELECT * FROM favorite_gists LIMIT ${PER_PAGE} OFFSET ${page * PER_PAGE}`;

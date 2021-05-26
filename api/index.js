@@ -16,5 +16,5 @@ const apolloServer = new ApolloServer({
 });
 
 apolloServer.listen({ port }).then(({ url }) => {
-  console.log(`Gatweay API ready at ${url}`);
+  console.log(`Gateway API ready at ${url}`);
 });

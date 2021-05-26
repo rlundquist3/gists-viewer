@@ -12,7 +12,7 @@ const serializeGist = (gist) => ({
 });
 
 const typeDefs = gql`
-  type Gist {
+  type Gist @key(fields: "id") {
     id: ID!
     createdAt: String
     description: String
@@ -25,15 +25,21 @@ const typeDefs = gql`
 `;
 
 const resolvers = {
+  Gist: {
+    __resolveReference: async ({ id }) => {
+      const res = await gistsAPI.getGistById(id);
+
+      return serializeGist(res);
+    },
+  },
   Query: {
     getGist: async (_object, { id }, _context, _info) => {
       const res = await gistsAPI.getGistById(id);
-      console.log({ res });
+
       return serializeGist(res);
     },
     getGistsForUser: async (_object, { username, page }, _context, _info) => {
       const res = await gistsAPI.getGistsForUser(username, page);
-      console.log({ res });
 
       return _.map(res, serializeGist);
     },
