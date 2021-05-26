@@ -18,7 +18,7 @@ const MarkUnfavorited = `
 export default function Gist({ id, createdAt, description, favorited: initialFavorited, refetch }) {
   const [favorited, setFavorited] = useState(initialFavorited);
   const [_markFavoritedResult, markFavorited] = useMutation(MarkFavorited);
-  const [_markUnfavoritedResult, markUnfavorited] = useMutation(MarkFavorited);
+  const [_markUnfavoritedResult, markUnfavorited] = useMutation(MarkUnfavorited);
 
   const handleMarkFavorited = () => {
     markFavorited({ id });
