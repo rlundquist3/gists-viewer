@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import Link from 'next/link';
 import { useMutation } from 'urql';
 import styled from 'styled-components';
 import { DateTime } from 'luxon';
@@ -15,7 +16,7 @@ const MarkUnfavorited = `
   }
 `;
 
-export default function Gist({ id, createdAt, description, favorited: initialFavorited, refetch }) {
+export default function Gist({ id, createdAt, description, favorited: initialFavorited, username, refetch }) {
   const [favorited, setFavorited] = useState(initialFavorited);
   const [_markFavoritedResult, markFavorited] = useMutation(MarkFavorited);
   const [_markUnfavoritedResult, markUnfavorited] = useMutation(MarkUnfavorited);
@@ -23,18 +24,27 @@ export default function Gist({ id, createdAt, description, favorited: initialFav
   const handleMarkFavorited = () => {
     markFavorited({ id });
     setFavorited(true);
-    refetch();
+
+    if (refetch) {
+      refetch();
+    }
   };
   const handleMarkUnfavorited = () => {
     markUnfavorited({ id });
     setFavorited(false);
-    refetch();
+
+    if (refetch) {
+      refetch();
+    }
   };
 
   return (
     <Container>
       <div>
-        <h3>{description}</h3>
+        <Link href={`/gist-detail/${id}`}>
+          <H3>{description}</H3>
+        </Link>
+        <p>by: {username}</p>
         <p>{DateTime.fromISO(createdAt).toLocaleString(DateTime.DATETIME_FULL)}</p>
       </div>
 
@@ -50,4 +60,8 @@ const Container = styled.div`
   align-items: center;
   display: flex;
   justify-content: space-between;
+`;
+
+const H3 = styled.h3`
+  cursor: pointer;
 `;

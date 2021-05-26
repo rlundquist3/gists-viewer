@@ -12,6 +12,7 @@ const GetFavoritedGists = `
       gist {
         createdAt
         description
+        username
       }
     }
   }

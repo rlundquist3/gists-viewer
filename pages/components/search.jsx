@@ -1,31 +1,28 @@
 import { useState } from 'react';
 import styled from 'styled-components';
-import { Button, TextInput } from 'evergreen-ui';
+import { Button, SearchInput } from 'evergreen-ui';
+import { useRouter } from 'next/router';
 
 import Results from './results';
-import FavoritedGists from './favorited-gists';
 
 export default function Search() {
+  const router = useRouter();
   const [searchStr, setSearchStr] = useState('');
-  const [submittedSearch, setSubmittedSearch] = useState('');
 
   const handleSearchChange = (event) => {
     setSearchStr(event.target.value);
   };
 
   const handleSubmit = () => {
-    if (searchStr.length > 2) {
-      setSubmittedSearch(searchStr);
-    }
+    router.push(`/user-gists/${searchStr}`);
   };
 
   return (
     <div>
-      <TextInput value={searchStr} onChange={handleSearchChange} />
-      <Button onClick={handleSubmit}>Let's Go!</Button>
-
-      {submittedSearch.length > 2 && <Results searchStr={submittedSearch} />}
-      {submittedSearch.length <= 2 && <FavoritedGists />}
+      <SearchInput value={searchStr} onChange={handleSearchChange} marginRight='24px' />
+      <Button onClick={handleSubmit} disabled={searchStr.length < 2}>
+        Let's Go!
+      </Button>
     </div>
   );
 }

@@ -10,6 +10,7 @@ const GetGistsForUser = `
       id
       createdAt
       description
+      username
       favoriteGist {
         favorited
       }
