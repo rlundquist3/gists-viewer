@@ -27,6 +27,11 @@ const typeDefs = gql`
   extend type Query {
     getFavoritedGists(page: Int): [FavoriteGist]
   }
+
+  extend type Mutation {
+    markGistFavorited(id: ID!): Boolean
+    markGistUnfavorited(id: ID!): Boolean
+  }
 `;
 
 const resolvers = {
@@ -42,13 +47,41 @@ const resolvers = {
   },
   Query: {
     getFavoritedGists: async (_object, { page = 0 }, _context, _info) => {
-      const queryText = `SELECT * FROM favorite_gists LIMIT ${PER_PAGE} OFFSET ${page * PER_PAGE}`;
+      const queryText = `SELECT * FROM favorite_gists WHERE favorited = true LIMIT ${PER_PAGE} OFFSET ${
+        page * PER_PAGE
+      }`;
 
       const res = await db.query(queryText);
 
-      console.log(res);
-
       return _.map(res.rows, serializeFavorite);
+    },
+  },
+  Mutation: {
+    markGistFavorited: async (_object, { id }, _context, _info) => {
+      const queryText = `INSERT INTO favorite_gists(gist_id, favorited) VALUES($1, $2) ON CONFLICT (gist_id) DO UPDATE SET favorited = true`;
+
+      try {
+        await db.query(queryText, [id, true]);
+
+        return true;
+      } catch (error) {
+        console.error(error);
+
+        return false;
+      }
+    },
+    markGistUnfavorited: async (_object, { id }, _context, _info) => {
+      const queryText = `INSERT INTO favorite_gists(gist_id, favorited) VALUES($1, $2) ON CONFLICT (gist_id) DO UPDATE SET favorited = false`;
+
+      try {
+        await db.query(queryText, [id, false]);
+
+        return true;
+      } catch (error) {
+        console.error(error);
+
+        return false;
+      }
     },
   },
 };

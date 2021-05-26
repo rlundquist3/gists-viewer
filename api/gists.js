@@ -27,21 +27,33 @@ const typeDefs = gql`
 const resolvers = {
   Gist: {
     __resolveReference: async ({ id }) => {
-      const res = await gistsAPI.getGistById(id);
+      try {
+        const res = await gistsAPI.getGistById(id);
 
-      return serializeGist(res);
+        return serializeGist(res);
+      } catch (error) {
+        console.error(error);
+      }
     },
   },
   Query: {
     getGist: async (_object, { id }, _context, _info) => {
-      const res = await gistsAPI.getGistById(id);
+      try {
+        const res = await gistsAPI.getGistById(id);
 
-      return serializeGist(res);
+        return serializeGist(res);
+      } catch (error) {
+        console.error(error);
+      }
     },
     getGistsForUser: async (_object, { username, page }, _context, _info) => {
-      const res = await gistsAPI.getGistsForUser(username, page);
+      try {
+        const res = await gistsAPI.getGistsForUser(username, page);
 
-      return _.map(res, serializeGist);
+        return _.map(res, serializeGist);
+      } catch (error) {
+        console.error(error);
+      }
     },
   },
 };

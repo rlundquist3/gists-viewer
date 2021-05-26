@@ -12,8 +12,11 @@ const pool = new Pool({
   const client = await pool.connect();
   try {
     await client.query('BEGIN');
+
+    await client.query('DROP TABLE IF EXISTS favorite_gists');
+
     const tableSetupText =
-      'CREATE TABLE favorite_gists(id INT GENERATED ALWAYS AS IDENTITY, gist_id TEXT, favorited BOOLEAN)';
+      'CREATE TABLE favorite_gists(id INT GENERATED ALWAYS AS IDENTITY, gist_id TEXT UNIQUE, favorited BOOLEAN)';
     const res = await client.query(tableSetupText);
     await client.query('COMMIT');
   } catch (e) {
