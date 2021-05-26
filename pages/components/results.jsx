@@ -7,6 +7,7 @@ import Gist from './gist';
 const GetGistsForUser = `
   query($username: String!, $page: Int) {
     getGistsForUser(username: $username, page: $page) {
+      id
       createdAt
       description
       favoriteGist {
@@ -17,7 +18,7 @@ const GetGistsForUser = `
 `;
 
 export default function Results({ searchStr }) {
-  const [{ data, fetching, error }, _reexecuteQuery] = useQuery({
+  const [{ data, fetching, error }, reexecuteQuery] = useQuery({
     query: GetGistsForUser,
     variables: { username: searchStr, page: 0 },
   });
@@ -33,7 +34,7 @@ export default function Results({ searchStr }) {
     <UL>
       {map(data.getGistsForUser, (gist) => (
         <li key={gist.id}>
-          <Gist {...gist} />
+          <Gist {...gist} refetch={reexecuteQuery} />
         </li>
       ))}
     </UL>

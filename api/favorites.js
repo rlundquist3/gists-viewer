@@ -53,7 +53,11 @@ const resolvers = {
       try {
         const res = await db.query(queryText);
 
-        return serializeFavorite(res.rows[0]);
+        if (res.rows && res.rows[0]) {
+          return serializeFavorite(res.rows[0]);
+        }
+
+        return null;
       } catch (error) {
         console.error(error);
       }

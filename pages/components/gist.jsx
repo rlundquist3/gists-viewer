@@ -1,10 +1,35 @@
+import { useState } from 'react';
+import { useMutation } from 'urql';
 import styled from 'styled-components';
 import { DateTime } from 'luxon';
-import { Button, IconButton, TickIcon } from 'evergreen-ui';
+import { IconButton, TickIcon } from 'evergreen-ui';
 
-export default function Gist({ id, createdAt, description, favoriteGist }) {
-  const markFavorited = () => {};
-  const markUnfavorited = () => {};
+const MarkFavorited = `
+  mutation ($id: ID!) {
+    markGistFavorited (id: $id)
+  }
+`;
+const MarkUnfavorited = `
+  mutation ($id: ID!) {
+    markGistUnfavorited (id: $id)
+  }
+`;
+
+export default function Gist({ id, createdAt, description, favoriteGist, refetch }) {
+  const [favorited, setFavorited] = useState(favoriteGist?.favorited);
+  const [_markFavoritedResult, markFavorited] = useMutation(MarkFavorited);
+  const [_markUnfavoritedResult, markUnfavorited] = useMutation(MarkFavorited);
+
+  const handleMarkFavorited = () => {
+    markFavorited({ id });
+    setFavorited(true);
+    refetch();
+  };
+  const handleMarkUnfavorited = () => {
+    markUnfavorited({ id });
+    setFavorited(false);
+    refetch();
+  };
 
   return (
     <Container>
@@ -13,10 +38,10 @@ export default function Gist({ id, createdAt, description, favoriteGist }) {
         <p>{DateTime.fromISO(createdAt).toLocaleString(DateTime.DATETIME_FULL)}</p>
       </div>
 
-      {favoriteGist?.favorited && (
-        <IconButton icon={TickIcon} appearance='primary' intent='success' onClick={markUnfavorited} />
+      {favorited && (
+        <IconButton icon={TickIcon} appearance='primary' intent='success' onClick={handleMarkUnfavorited} />
       )}
-      {!favoriteGist?.favorited && <IconButton icon={TickIcon} intent='success' onClick={markFavorited} />}
+      {!favorited && <IconButton icon={TickIcon} intent='success' onClick={handleMarkFavorited} />}
     </Container>
   );
 }
