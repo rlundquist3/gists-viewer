@@ -22,6 +22,10 @@ export default function FavoritedGists() {
     query: GetFavoritedGists,
   });
 
+  const refetch = () => {
+    reexecuteQuery({ requestPolicy: 'network-only' });
+  };
+
   if (fetching) {
     return <p>working on it...</p>;
   }
@@ -33,7 +37,7 @@ export default function FavoritedGists() {
     <UL>
       {map(data.getFavoritedGists, (favorite) => (
         <li key={favorite.id}>
-          <Gist {...favorite.gist[0]} id={favorite.gistId} favorited refetch={reexecuteQuery} />
+          <Gist {...favorite.gist[0]} id={favorite.gistId} favorited refetch={refetch} />
         </li>
       ))}
     </UL>

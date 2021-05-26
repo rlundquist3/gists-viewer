@@ -23,6 +23,10 @@ export default function Results({ searchStr }) {
     variables: { username: searchStr, page: 0 },
   });
 
+  const refetch = () => {
+    reexecuteQuery({ requestPolicy: 'network-only' });
+  };
+
   if (fetching) {
     return <p>working on it...</p>;
   }
@@ -34,7 +38,7 @@ export default function Results({ searchStr }) {
     <UL>
       {map(data.getGistsForUser, (gist) => (
         <li key={gist.id}>
-          <Gist {...gist} favorited={gist.favoriteGist?.favorited} refetch={reexecuteQuery} />
+          <Gist {...gist} favorited={gist.favoriteGist?.favorited} refetch={refetch} />
         </li>
       ))}
     </UL>
