@@ -11,13 +11,17 @@
     "@apollo/federation": "^0.25.1",
     "@apollo/gateway": "^0.28.2",
     "apollo-server": "^2.24.1",
+    "evergreen-ui": "^6.0.1",
     "graphql": "^15.5.0",
     "lodash": "^4.17.21",
+    "luxon": "^1.27.0",
     "next": "10.2.3",
     "node-fetch": "^2.6.1",
     "pg": "^8.6.0",
     "react": "17.0.2",
-    "react-dom": "17.0.2"
+    "react-dom": "17.0.2",
+    "styled-components": "^5.3.0",
+    "urql": "^2.0.3"
   },
   "devDependencies": {
     "eslint": "^7.27.0",

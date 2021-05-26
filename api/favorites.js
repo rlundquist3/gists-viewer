@@ -22,6 +22,7 @@ const typeDefs = gql`
 
   extend type Gist @key(fields: "id") {
     id: ID! @external
+    favoriteGist: FavoriteGist
   }
 
   extend type Query {
@@ -43,6 +44,19 @@ const resolvers = {
           id: favoriteGist.gistId,
         },
       ];
+    },
+  },
+  Gist: {
+    favoriteGist: async (gist, _args, _context, _info) => {
+      const queryText = `SELECT * FROM favorite_gists WHERE gist_id = '${String(gist.id)}'`;
+
+      try {
+        const res = await db.query(queryText);
+
+        return serializeFavorite(res.rows[0]);
+      } catch (error) {
+        console.error(error);
+      }
     },
   },
   Query: {
