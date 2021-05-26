@@ -9,6 +9,8 @@ const port = 3002;
 const serializeGist = (gist) => ({
   ..._.pick(gist, ['id', 'description']),
   createdAt: gist.created_at,
+  files: _.keys(gist.files),
+  username: gist.owner.login,
 });
 
 const typeDefs = gql`
@@ -16,6 +18,8 @@ const typeDefs = gql`
     id: ID!
     createdAt: String
     description: String
+    files: [String]
+    username: String
   }
 
   extend type Query {
